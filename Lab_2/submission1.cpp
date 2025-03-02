@@ -54,18 +54,17 @@ void printBoard(vector<vector<pair<int, int>>> board)
     }
 }
 
-int rowDominated(vector<vector<pair<int, int>>> board)
-{
-
-    for (int i = 0; i < board.size(); i++)
-    {
-        for (int j = 0; j < board[0].size(); j++)
-        {
-            if (board[i][j] > board[i][j] && board[0][j] > board[i][j + 1])
-        }
-    }
-    return -1;
-}
+// int rowDominated(vector<vector<pair<int, int>>> board)
+// {
+//     for (int i = 0; i < board.size(); i++)
+//     {
+//         for (int j = 0; j < board[0].size(); j++)
+//         {
+//             if (board[i][j] > board[i][j] && board[0][j] > board[i][j + 1])
+//         }
+//     }
+//     return -1;
+// }
 
 vector<vector<pair<int, int>>> elimination(vector<vector<pair<int, int>>> oldBoard, string rowOrColumn)
 {
@@ -83,7 +82,7 @@ vector<vector<pair<int, int>>> elimination(vector<vector<pair<int, int>>> oldBoa
         {
             if (rowOrColumn == "row")
             {
-                if (board[i][j] > board[i + 1][j] && board[i][j] > board[i + 1][j + 1] &&)
+                if (board[i][j] > board[i + 1][j] && board[i][j] > board[i + 1][j + 1])
                     if (board[i][j].first < min)
                     {
                         minIndexJ = j;
