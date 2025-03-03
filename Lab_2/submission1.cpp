@@ -6,56 +6,6 @@
 #include <utility>
 using namespace std;
 
-// vector<string> splitBySpaces(string input)
-// {
-//     vector<string> output;
-//     int findSpace = input.find(" ");
-//     output.push_back(input.substr(0, findSpace));
-//     for (int i = 0; i < input.size(); i++)
-//     {
-//         if (isspace(input.at(i)))
-//         {
-//             output.push_back(input.substr(i + 1, 3));
-//         }
-//     }
-
-//     return output;
-// }
-
-// vector<pair<int, int>> splitIntoDigits(string input)
-// {
-//     vector<pair<int, int>> cell;
-//     vector<int> digits;
-//     int allowsMoreDigits;
-//     for (string word : splitBySpaces(input))
-//     {
-//         cout << word << endl;
-//         allowsMoreDigits = 0;
-//         for (char c : word)
-//         {
-//             if (!isdigit(c))
-//             {
-//                 allowsMoreDigits = 0;
-//             }
-//             if (isdigit(c))
-//             {
-//                 digits.push_back(c - '0');
-//             }
-//         }
-//     }
-//     for (int i = 0; i < digits.size() / 2; i++)
-//     {
-//         cell.push_back({digits[i + i], digits[i + i + 1]});
-//     }
-//     // for (int i = 0; i < cell.size(); i++)
-//     // {
-//     //     cout << cell[i].first << "," << cell[i].second << endl;
-//     // }
-//     return cell;
-// }
-
-// this wasn't really mentioned.
-// changed to this way because old way didn't account for multiple digits
 vector<pair<int, int>> splitIntoPairs(string input)
 {
     vector<pair<int, int>> pairs;
@@ -88,38 +38,58 @@ int rowDominated(vector<vector<pair<int, int>>> board)
 {
     int boardSize = static_cast<int>(board.size());
     int boardSizeAtI = static_cast<int>(board[0].size());
-    int k;
+
+    if (boardSizeAtI == 1)
+    {
+        if (board[0][0].first > board[1][0].first)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
     for (int i = 0; i < boardSize; i++)
     {
-        k = i + 1;
-        for (int j = 0; j < boardSizeAtI; j++)
+        for (int k = i + 1; k < boardSize; k++)
         {
-            // cout << "K: " << k << endl;
-            if (boardSize == k)
+            for (int j = 0; j < boardSizeAtI; j++)
             {
-                // if it goes through all and doesn't find a dominanting row
-                // any row that isn't k will dominate all other rows.
-                // Last row dominates all other rows since it went through all iterations.
-                // cout << "I DOMNINATED: " << i - 1 << endl;
-                return i - 1;
-            }
-            if (board[i][j].first > board[k][j].first)
-            {
-                // cout << "COMES HERE?: " << j << endl;
-                if (j == boardSizeAtI - 1)
+                if (board[i][j].first > board[k][j].first)
                 {
-                    // cout << "K ROW IS DOMINANTED BY I's ROW: K: " << k << " I: " << i << endl;
-                    return k;
+                    if (j == boardSizeAtI - 1)
+                    {
+                        return k;
+                    }
+                    continue;
                 }
-                continue;
+                else
+                {
+                    break;
+                }
             }
-            else
+        }
+    }
+    for (int i = boardSize - 1; i >= 0; i--)
+    {
+        for (int j = boardSizeAtI - 1; j >= 0; j--)
+        {
+            for (int k = i - 1; k >= 0; k--)
             {
-                break;
+                if (board[i][j].first > board[k][j].first)
+                {
+                    if (j == 1)
+                    {
+                        return k;
+                    }
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
             }
-            // k's row is dominiated by i
-            // cout << "K DOMNINATED: " << k << endl;
-            return k;
         }
     }
     return -1;
@@ -129,41 +99,58 @@ int columnDominated(vector<vector<pair<int, int>>> board)
 {
     int boardSize = static_cast<int>(board.size());
     int boardSizeAtI = static_cast<int>(board[0].size());
-    int k;
+
+    if (boardSize == 1)
+    {
+        if (board[0][1].second > board[0][0].second)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
     for (int i = 0; i < boardSizeAtI; i++)
     {
-        k = i + 1;
         for (int j = 0; j < boardSize; j++)
         {
-            // cout << "COUNTERS: J " << j << " COUNTERS : I " << i << " BOARDSIZE: " << boardSize << " BOARDSIZEATI " << boardSizeAtI << endl;
-            // cout << "III BOARD: " << board[j][i].second << " COMPARES: " << board[j][k].second << endl;
-            if (k == boardSizeAtI)
+            for (int k = j + 1; k <= boardSize; k++)
             {
-                // if it goes through all and doesn't find a dominanting row
-                // any row that isn't k will dominate all other rows.
-                // Last row dominates all other rows since it went through all iterations.
-                // cout << "J DOMNINATES: " << j << endl;
-                return j;
-            }
-            if (board[j][i].second > board[j][k].second)
-            {
-                // cout << "IN IF STATEMENT BOARD: " << board[j][i].second << " COMPARES: " << board[j][k].second << " J " << j << " I " << i << endl;
-                // cout << "NEW BOARD" << board[j][k].second << endl;
-                // cout << "COMES HERE?: " << j << endl;
-                if (j == boardSize - 1)
+                if (board[i][j].second > board[i][k].second)
                 {
-                    // cout << "K COL IS DOMINANTED BY I's COL: K: " << k << " I: " << i << endl;
-                    return k;
+                    if (i == boardSize - 1)
+                    {
+                        return k;
+                    }
+                    continue;
                 }
-                continue;
+                else
+                {
+                    break;
+                }
             }
-            else
+        }
+    }
+    for (int i = boardSizeAtI - 1; i >= 0; i--)
+    {
+        for (int j = boardSize - 1; j >= 0; j--)
+        {
+            for (int k = j; k >= 0; k--)
             {
-                break;
+                if (board[j][i].second > board[j][k].second)
+                {
+                    if (i == 1)
+                    {
+                        return k;
+                    }
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
             }
-            // k's row is dominiated by i
-            // cout << "K DOMNINATED: " << k << endl;
-            return k;
         }
     }
     return -1;
@@ -176,34 +163,17 @@ vector<vector<pair<int, int>>> elimination(vector<vector<pair<int, int>>> board,
     int minIndexI = -1;
     int minIndexJ = -1;
     int boardSize = static_cast<int>(board.size());
-    int boardSizeAtI = static_cast<int>(board.size());
+    int boardSizeAtI = static_cast<int>(board[0].size());
 
-    for (int i = 0; i < boardSize; i++)
+    if (rowOrColumn == "row")
     {
-        for (int j = 0; j < boardSizeAtI; j++)
-        {
-            if (rowOrColumn == "row")
-            {
-                minIndexI = rowDominated(board);
-                // if (board[i][j].first < min)
-                // {
-                //     minIndexJ = j;
-                //     minIndexI = i;
-                //     min = board[i][j].first;
-                // }
-            }
-            if (rowOrColumn == "column")
-            {
-                // if (board[i][j].second < min)
-                // {
-                //     minIndexJ = j;
-                //     minIndexI = i;
-                //     min = board[i][j].second;
-                // }
-                minIndexJ = columnDominated(board);
-            }
-        }
+        minIndexI = rowDominated(board);
     }
+    else
+    {
+        minIndexJ = columnDominated(board);
+    }
+
     if (rowOrColumn == "row")
     {
         board.erase(board.begin() + minIndexI);
@@ -215,7 +185,6 @@ vector<vector<pair<int, int>>> elimination(vector<vector<pair<int, int>>> board,
             board[i].erase(next(board[i].begin(), minIndexJ));
         }
     }
-
     if (!(board.size() == 1 && board[0].size() == 1))
     {
         if (rowOrColumn == "row")
@@ -249,7 +218,6 @@ int main()
     {
         board[i] = splitIntoPairs(input[i + 1]);
     }
-
     // columnDominated(board);
     printBoard(elimination(board, "row"));
 }
