@@ -41,6 +41,17 @@ int rowDominated(vector<vector<pair<int, int>>> board)
 
     if (boardSizeAtI == 1)
     {
+        if (board[0][0].first == board[1][0].first)
+        {
+            if (board[0][0].second >= board[1][0].second)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
         if (board[0][0].first > board[1][0].first)
         {
             return 1;
@@ -69,19 +80,13 @@ int rowDominated(vector<vector<pair<int, int>>> board)
                     break;
                 }
             }
-        }
-    }
-    for (int i = boardSize - 1; i >= 0; i--)
-    {
-        for (int j = boardSizeAtI - 1; j >= 0; j--)
-        {
-            for (int k = i - 1; k >= 0; k--)
+            for (int j = 0; j < boardSizeAtI; j++)
             {
-                if (board[i][j].first > board[k][j].first)
+                if (board[i][j].first < board[k][j].first)
                 {
-                    if (j == 1)
+                    if (j == boardSizeAtI - 1)
                     {
-                        return k;
+                        return i;
                     }
                     continue;
                 }
@@ -92,6 +97,8 @@ int rowDominated(vector<vector<pair<int, int>>> board)
             }
         }
     }
+
+    cout << "NOT HERE?" << endl;
     return -1;
 }
 
@@ -102,7 +109,18 @@ int columnDominated(vector<vector<pair<int, int>>> board)
 
     if (boardSize == 1)
     {
-        if (board[0][1].second > board[0][0].second)
+        if (board[0][1].second == board[0][0].second)
+        {
+            if (board[0][1].first >= board[0][0].first)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        if (board[0][1].second >= board[0][0].second)
         {
             return 0;
         }
@@ -115,32 +133,11 @@ int columnDominated(vector<vector<pair<int, int>>> board)
     {
         for (int j = 0; j < boardSize; j++)
         {
-            for (int k = j + 1; k <= boardSize; k++)
-            {
-                if (board[i][j].second > board[i][k].second)
-                {
-                    if (i == boardSize - 1)
-                    {
-                        return k;
-                    }
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-    }
-    for (int i = boardSizeAtI - 1; i >= 0; i--)
-    {
-        for (int j = boardSize - 1; j >= 0; j--)
-        {
-            for (int k = j; k >= 0; k--)
+            for (int k = i + 1; k <= boardSizeAtI; k++)
             {
                 if (board[j][i].second > board[j][k].second)
                 {
-                    if (i == 1)
+                    if (j == boardSize - 1)
                     {
                         return k;
                     }
@@ -151,15 +148,31 @@ int columnDominated(vector<vector<pair<int, int>>> board)
                     break;
                 }
             }
+
+            for (int k = i + 1; k < boardSizeAtI; k++)
+            {
+                if (board[j][i].second < board[j][k].second)
+                {
+                    if (j == boardSize - 1)
+                    {
+                        return i;
+                    }
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
     }
+
     return -1;
 }
 
 vector<vector<pair<int, int>>> elimination(vector<vector<pair<int, int>>> board, string rowOrColumn)
 {
 
-    int min = 1000;
     int minIndexI = -1;
     int minIndexJ = -1;
     int boardSize = static_cast<int>(board.size());
@@ -173,7 +186,6 @@ vector<vector<pair<int, int>>> elimination(vector<vector<pair<int, int>>> board,
     {
         minIndexJ = columnDominated(board);
     }
-
     if (rowOrColumn == "row")
     {
         board.erase(board.begin() + minIndexI);
@@ -219,5 +231,12 @@ int main()
         board[i] = splitIntoPairs(input[i + 1]);
     }
     // columnDominated(board);
-    printBoard(elimination(board, "row"));
+    if (board.size() == 1 && board[0].size() == 1)
+    {
+        printBoard(board);
+    }
+    else
+    {
+        printBoard(elimination(board, "row"));
+    }
 }
