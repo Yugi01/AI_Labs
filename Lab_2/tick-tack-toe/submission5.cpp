@@ -7,6 +7,8 @@
 #include <algorithm>
 using namespace std;
 
+// This needs to be here so we can check the minimax with.
+// The player that is starting otherwise the evaluation is off.
 char PLAYER;
 
 pair<int, int> formatMoves(string moves)
