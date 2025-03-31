@@ -54,7 +54,8 @@ for play in plays:
     for query_word in words_search:
         prob *= number_of_entries[query_word]/total_count
     # print(math.log(prob)) if prob !=0 else print(0)
-    log_probabilty[play] = math.log(prob)*prior
+    #-100 because when the prob is logged is becomes a neg number so -100 essentially makes it 0%
+    log_probabilty[play] = math.log(prob)*prior if prob!=0 else -100
     probabilty[play] = prob* prior
 
 A = log_probabilty[max(log_probabilty, key=log_probabilty.get)]
@@ -73,5 +74,5 @@ for play in plays:
 # print(christian_name[max(probabilty, key=probabilty.get)])
 # print(sum(final_final_fr_prob.values())) # total 100 nice.
 for play in plays:
-    print(f'{christian_name[play]} : {final_final_fr_prob[play]:.2f}')
+    print(f'{christian_name[play]} : {final_final_fr_prob[play]:.2f}%')
     
