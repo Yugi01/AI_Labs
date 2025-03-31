@@ -18,6 +18,8 @@ words_search = re.sub(r'[^A-Za-z\s]', '', input).lower().split()
 plays = ["ado.txt","hamlet.txt","lear.txt","macbeth.txt","merchant.txt","midsummer.txt","othello.txt","romeo.txt","tempest.txt","twelfth.txt"]
 prior = 1/10 #since there is 10 plays each equally as likely.
 probabilty=dict.fromkeys(plays,0)
+log_probabilty=dict.fromkeys(plays,0)
+final_probs = dict.fromkeys(plays,0)
 #making the prob a dict to check which one has the highest prob.
 
 christian_name ={
@@ -33,9 +35,10 @@ christian_name ={
 "hamlet.txt":"Hamlet",
 }
 
+final_final_fr_prob = dict.fromkeys(christian_name.values(),0)
+
 for play in plays:
-    # print(play)
-    prob = 0
+    prob = 1
     # print(play)
     with open(f'{play}', 'r') as file:
         raw_content = file.read()
@@ -51,7 +54,24 @@ for play in plays:
     for query_word in words_search:
         prob *= number_of_entries[query_word]/total_count
     # print(math.log(prob)) if prob !=0 else print(0)
-
+    log_probabilty[play] = math.log(prob)*prior
     probabilty[play] = prob* prior
 
-print(christian_name[max(probabilty, key=probabilty.get)])
+A = log_probabilty[max(log_probabilty, key=log_probabilty.get)]
+# print(A)
+total_log = 0
+for play in plays:
+    total_log += math.exp(log_probabilty[play]-A)
+# final_probs = A+math.log(math.exp(log_probabilty - A) + )
+# print("TOTAL",total_log)
+final_log = A + math.log(total_log)
+for play in plays:
+    final_probs[play] = log_probabilty[play] - final_log
+# print(log_probabilty)
+for play in plays:
+    final_final_fr_prob[play] = math.exp(final_probs[play])*100
+# print(christian_name[max(probabilty, key=probabilty.get)])
+# print(sum(final_final_fr_prob.values())) # total 100 nice.
+for play in plays:
+    print(f'{christian_name[play]} : {final_final_fr_prob[play]:.2f}')
+    
