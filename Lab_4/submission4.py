@@ -59,16 +59,15 @@ for play in plays:
     probabilty[play] = prob* prior
 
 A = log_probabilty[max(log_probabilty, key=log_probabilty.get)]
-# print(A)
+
 total_log = 0
 for play in plays:
     total_log += math.exp(log_probabilty[play]-A)
-# final_probs = A+math.log(math.exp(log_probabilty - A) + )
-# print("TOTAL",total_log)
+
 final_log = A + math.log(total_log)
 for play in plays:
     final_probs[play] = log_probabilty[play] - final_log
-# print(log_probabilty)
+
 for play in plays:
     final_final_fr_prob[play] = math.exp(final_probs[play])*100
 # print(christian_name[max(probabilty, key=probabilty.get)])
