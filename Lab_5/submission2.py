@@ -32,4 +32,10 @@ def forward(observation):
         print(f'Timestep {i+1}: {finalProb:.3f}')
         initial = finalProb
 
+    for i in range(2):
+        probRain = initial*pRain+(1-initial)*pNotRain
+        print(f'Timestep {i+1+len(observation)}: {probRain:.3f}')
+        initial = probRain        
+
+
 forward(umbrella)
